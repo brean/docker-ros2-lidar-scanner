@@ -26,15 +26,16 @@ services:
 
   ros2-rviz:
     tty: true
-    user: ${USER}
+    user: andreas
     image: ros2-rviz
     container_name: ros2-rviz
+    working_dir: /cozmo
     command: [
-      "rviz2"
+      "rviz"
     ]
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
-      - "${XDG_RUNTIME_DIR}:/tmp/runtime-${USER}"
+      - "${XDG_RUNTIME_DIR}:/tmp/runtime-andreas"
     environment:
       DISPLAY: ${DISPLAY}
     devices:
