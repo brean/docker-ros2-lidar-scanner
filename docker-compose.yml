@@ -1,0 +1,42 @@
+# FROM tiryoh/ros2:dashing
+version: '3'
+
+services:
+  ros2-subscriber:
+    tty: true
+    image: osrf/ros2:nightly
+    container_name: ros2-subscriber
+    command: [
+      "ros2", "topic", "pub", "/chatter", "std_msgs/String", "data: Hello ROS2!"
+    ]
+    networks:
+      - ros
+
+  ros2-listener:
+    tty: true
+    image: osrf/ros2:nightly
+    container_name: ros2-listener
+    working_dir: /cozmo
+    command: [
+      "ros2", "topic", "echo", "/chatter"
+    ]
+    environment:
+      ROS_MASTER_URI: "${ROS_MASTER_URI}"
+    depends_on:
+      - ros2-subscriber
+    networks:
+      - ros
+
+  ros2-list-topics:
+    image: osrf/ros2:nightly
+    container_name: ros2-list-topics
+    command: ["ros2", "topic", "list"]
+    environment:
+      ROS_MASTER_URI: "${ROS_MASTER_URI}"
+    depends_on:
+      - ros2-subscriber
+    networks:
+      - ros
+
+networks:
+  ros:
