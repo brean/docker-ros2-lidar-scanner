@@ -1,4 +1,3 @@
-# FROM tiryoh/ros2:dashing
 version: '3'
 
 services:
@@ -20,8 +19,6 @@ services:
     command: [
       "ros2", "topic", "echo", "/chatter"
     ]
-    environment:
-      ROS_MASTER_URI: "${ROS_MASTER_URI}"
     depends_on:
       - ros2-subscriber
     networks:
@@ -31,8 +28,6 @@ services:
     image: osrf/ros2:nightly
     container_name: ros2-list-topics
     command: ["ros2", "topic", "list"]
-    environment:
-      ROS_MASTER_URI: "${ROS_MASTER_URI}"
     depends_on:
       - ros2-subscriber
     networks:
