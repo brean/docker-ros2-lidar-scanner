@@ -1,36 +1,53 @@
 version: '3'
 
 services:
-  ros2-subscriber:
+  ros2-rplidar:
+    # rp-lidar scanner
+    # The driver publishes device-dependent sensor_msgs/LaserScan data.
     tty: true
-    image: osrf/ros2:nightly
-    container_name: ros2-subscriber
+    privileged: true
+    image: ros2-rplidar
+    container_name: ros2-rplidar
     command: [
-      "ros2", "topic", "pub", "/chatter", "std_msgs/String", "data: Hello ROS2!"
+      "bash", "-c", "source /opt/ros/ros2_ws/src/install/setup.bash && ros2 launch /opt/ros/ros2_ws/src/rplidar_ros/launch/rplidar.launch.py"
     ]
+    devices:
+      - /dev/ttyUSB0
     networks:
-      - ros
+     - ros
 
-  ros2-listener:
-    tty: true
-    image: osrf/ros2:nightly
-    container_name: ros2-listener
-    working_dir: /cozmo
-    command: [
-      "ros2", "topic", "echo", "/chatter"
-    ]
-    depends_on:
-      - ros2-subscriber
-    networks:
-      - ros
 
-  ros2-rviz:
+# ros2-subscriber:
+#   tty: true
+#   image: osrf/ros2:nightly
+#   container_name: ros2-subscriber
+#   command: [
+#     "ros2", "topic", "pub", "/chatter", "std_msgs/String", "data: Hello ROS2!"
+#   ]
+#   networks:
+#     - ros
+
+# ros2-listener:
+#   tty: true
+#   image: osrf/ros2:nightly
+#   container_name: ros2-listener
+#   working_dir: /cozmo
+#   command: [
+#     "ros2", "topic", "echo", "/chatter"
+#   ]
+#   depends_on:
+#     - ros2-subscriber
+#   networks:
+#     - ros
+
+  ros2-rviz-rplidar:
+    # run rviz client
     tty: true
     user: ${USER}
-    image: ros2-rviz
-    container_name: ros2-rviz
+    image: ros2-rviz-rplidar
+    container_name: ros2-rviz-rplidar
     command: [
-      "rviz2"
+      "rviz2", "-d", "/opt/ros/ros2_ws/src/rplidar_ros/rplidar.rviz"
     ]
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
@@ -41,16 +58,17 @@ services:
       - /dev/dri
       - /dev/snd
     depends_on:
-      - ros2-subscriber
+      - ros2-rplidar
     networks:
       - ros
 
   ros2-list-topics:
-    image: osrf/ros2:nightly
+    # list topics for debugging
+    image: ros:dashing
     container_name: ros2-list-topics
     command: ["ros2", "topic", "list"]
     depends_on:
-      - ros2-subscriber
+      - ros2-rplidar
     networks:
       - ros
 
