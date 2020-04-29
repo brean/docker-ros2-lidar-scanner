@@ -32,7 +32,7 @@ services:
     image: ros2-rviz-rplidar
     container_name: ros2-rviz-rplidar
     command: [
-      "rviz2", "-d", "/opt/ros/ros2_ws/src/rplidar_ros/rplidar.rviz"
+      "rviz2", "-d", "/opt/ros/ros2_ws/src/rplidar_ros/rviz/rplidar.rviz"
     ]
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
