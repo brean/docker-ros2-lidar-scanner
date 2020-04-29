@@ -1,14 +1,18 @@
 FROM ros2-rplidar
 
+ARG USER=${USER}
+ARG USER_ID=${USER_ID}
+
 ENV CHOOSE_ROS_DISTRO=dashing
-ENV USER=andreas
-ENV GID=1000
+ENV USER=${USER}
+ENV USER_ID=${USER_ID}
 
 RUN apt-get update && apt-get install -q -y \
   ros-$CHOOSE_ROS_DISTRO-rviz2 \
   && rm -rf /var/lib/apt/lists/
 
-# WARNING! this will only run on my machine!
-RUN useradd -u $GID $USER \
+RUN echo ${USER_ID}:${USER}
+
+RUN useradd -u $USER_ID $USER \
   && mkdir -p /home/$USER/ \
   && chown $USER /home/$USER/

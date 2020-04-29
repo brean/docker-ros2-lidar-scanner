@@ -4,6 +4,9 @@ services:
   ros2-rplidar:
     # rp-lidar scanner
     # The driver publishes device-dependent sensor_msgs/LaserScan data.
+    build:
+      context: ./rplidar
+      dockerfile: Dockerfile
     tty: true
     privileged: true
     image: ros2-rplidar
@@ -16,32 +19,14 @@ services:
     networks:
      - ros
 
-
-# ros2-subscriber:
-#   tty: true
-#   image: osrf/ros2:nightly
-#   container_name: ros2-subscriber
-#   command: [
-#     "ros2", "topic", "pub", "/chatter", "std_msgs/String", "data: Hello ROS2!"
-#   ]
-#   networks:
-#     - ros
-
-# ros2-listener:
-#   tty: true
-#   image: osrf/ros2:nightly
-#   container_name: ros2-listener
-#   working_dir: /cozmo
-#   command: [
-#     "ros2", "topic", "echo", "/chatter"
-#   ]
-#   depends_on:
-#     - ros2-subscriber
-#   networks:
-#     - ros
-
   ros2-rviz-rplidar:
     # run rviz client
+    build:
+      context: ./rviz-rplidar
+      dockerfile: Dockerfile
+      args:
+        USER: ${USER}
+        USER_ID: ${USER_ID}
     tty: true
     user: ${USER}
     image: ros2-rviz-rplidar
